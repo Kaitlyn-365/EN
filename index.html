@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EN - Entertainment Narrative</title>
+    <style>
+        body { background-color: #0b0b0b; color: white; font-family: sans-serif; text-align: center; }
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; }
+        video { width: 100%; border-radius: 8px; box-shadow: 0px 4px 20px rgba(255,255,255,0.1); }
+        h1 { font-size: 2.5rem; letter-spacing: 2px; }
+        p { color: #a0a0a0; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ENTERTAINMENT NARRATIVE</h1>
+        <h2 id="episode-title">Loading Episode...</h2>
+        
+        <video id="en-player" controls autoplay>
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <p id="episode-desc"></p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // 1. Paste your Firebase Config Object here from your console
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 2. Fetch the episode metadata from Firestore
+        // This looks inside your 'episodes' collection for a document named 'episode1'
+        db.collection("episodes").doc("episode1").get().then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                
+                // Update the text on the page
+                document.getElementById("episode-title").innerText = data.title;
+                document.getElementById("episode-desc").innerText = data.description;
+                
+                // Inject the video link into the player and load it
+                const player = document.getElementById("en-player");
+                player.src = data.videoUrl;
+                player.load();
+            } else {
+                console.log("No such episode found!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    </script>
+</body>
+</html>
