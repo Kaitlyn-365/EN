@@ -3,75 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EN - Entertainment Narrative</title>
+    <title>EN | Entertainment Narrative</title>
     <style>
-        body { background-color: #0b0b0b; color: white; font-family: sans-serif; text-align: center; }
-        .container { max-width: 800px; margin: 50px auto; padding: 20px; }
-        video { width: 100%; border-radius: 8px; box-shadow: 0px 4px 20px rgba(255,255,255,0.1); }
-        h1 { font-size: 2.5rem; letter-spacing: 2px; }
-        p { color: #a0a0a0; line-height: 1.6; }
+        /* CSS RESET & BASE STYLES */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { background-color: #141414; color: #ffffff; overflow-x: hidden; }
+
+        /* NAVBAR (YouTube Style Sticky Top) */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 40px; background: rgba(20, 20, 20, 0.95);
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            backdrop-filter: blur(10px); border-bottom: 1px solid #333;
+        }
+        .nav-logo { font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: #fff; text-decoration: none; }
+        .nav-logo span { color: #e50914; } /* A sleek red accent */
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: #e5e5e5; text-decoration: none; font-size: 1rem; transition: color 0.3s; }
+        .nav-links a:hover { color: #ffffff; }
+
+        /* HERO SECTION (Netflix Style Featured Banner) */
+        .hero {
+            height: 70vh;
+            background: linear-gradient(to top, #141414 0%, rgba(20,20,20,0) 100%), 
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop') center/cover;
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 0 40px; margin-top: 60px;
+        }
+        .hero h1 { font-size: 4rem; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); margin-bottom: 10px; }
+        .hero p { max-width: 600px; font-size: 1.2rem; color: #e5e5e5; margin-bottom: 20px; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
+        .btn { padding: 10px 24px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .btn-play { background-color: #ffffff; color: #000; margin-right: 10px; }
+        .btn-play:hover { background-color: #rgba(255,255,255,0.8); }
+        .btn-info { background-color: rgba(109, 109, 110, 0.7); color: white; }
+        .btn-info:hover { background-color: rgba(109, 109, 110, 0.4); }
+
+        /* VIDEO ROWS (Netflix Carousels + YouTube Details) */
+        .row { padding: 20px 40px; }
+        .row-title { font-size: 1.4rem; margin-bottom: 15px; font-weight: bold; }
+        .row-posters { 
+            display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; 
+            scrollbar-width: none; /* Hides scrollbar on Firefox */
+        }
+        .row-posters::-webkit-scrollbar { display: none; } /* Hides scrollbar on Chrome */
+        
+        .card { min-width: 280px; flex: 0 0 auto; transition: transform 0.3s ease; cursor: pointer; }
+        .card:hover { transform: scale(1.05); }
+        .card-img { width: 100%; aspect-ratio: 16/9; background-color: #222; border-radius: 8px; object-fit: cover; }
+        .card-info { margin-top: 8px; }
+        .card-title { font-size: 1rem; font-weight: bold; margin-bottom: 4px; }
+        .card-meta { font-size: 0.85rem; color: #aaa; }
+
+        /* THE VIDEO PLAYER (Hidden initially, pops up when play is clicked) */
+        #player-container { display: none; padding: 40px; background: #000; text-align: center; }
+        video { width: 80%; max-width: 1000px; border-radius: 8px; box-shadow: 0px 4px 20px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>ENTERTAINMENT NARRATIVE</h1>
-        <h2 id="episode-title">Loading Episode...</h2>
-        
-        <video id="en-player" controls autoplay>
-            <source src="" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+    <nav>
+        <a href="#" class="nav-logo">EN<span>.</span></a>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Series</a>
+            <a href="#">Films</a>
+            <a href="#">My List</a>
+        </div>
+    </nav>
 
-        <p id="episode-desc"></p>
+    <header class="hero">
+        <h1 id="hero-title">The Mysteries of Bradshaw Ranch</h1>
+        <p id="hero-desc">Located in the red rock backcountry outside Sedona, Arizona, Bradshaw Ranch is one of the world's premier paranormal hotspots. Surrounded by ancient "star ancestor" legends, it is a hotbed for UFO sightings, glowing orbs, Bigfoot encounters, and theories of interdimensional portals.</p>
+        <div>
+            <button class="btn btn-play" onclick="playVideo()">▶ Play</button>
+            <button class="btn btn-info">ⓘ More Info</button>
+        </div>
+    </header>
+
+    <div id="player-container">
+        <video id="en-player" controls>
+            <source src="./videos/ep1.mp4" type="video/mp4">
+        </video>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <section class="row">
+        <h2 class="row-title">The Mysteries of Bradshaw Ranch</h2>
+        <div class="row-posters">
+            <div class="card" onclick="playVideo()">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&auto=format&fit=crop" class="card-img" alt="Thumbnail">
+                <div class="card-info">
+                    <div class="card-title">Episode 1: Pilot</div>
+                    <div class="card-meta">1h 34m •  Documentary</div>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=600&auto=format&fit=crop" class="card-img" alt="Thumbnail">
+                <div class="card-info">
+                    <div class="card-title">Episode 2: [insert]</div>
+                    <div class="card-meta">[ ] • Documentary</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
-        // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAsdl0EIBYKxDlpV7Y8Yey0Uf2Kd3TBL6w",
-  authDomain: "entertainment-narrative.firebaseapp.com",
-  databaseURL: "https://entertainment-narrative-default-rtdb.firebaseio.com",
-  projectId: "entertainment-narrative",
-  storageBucket: "entertainment-narrative.firebasestorage.app",
-  messagingSenderId: "344883513457",
-  appId: "1:344883513457:web:b41b44fbba7289754e33d0",
-  measurementId: "G-J8QZVYWGRZ"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-        // 2. Fetch the episode metadata from Firestore
-        // This looks inside your 'episodes' collection for a document named 'episode1'
-        db.collection("episodes").doc("episode1").get().then((doc) => {
-            if (doc.exists) {
-                const data = doc.data();
-                
-                // Update the text on the page
-                document.getElementById("episode-title").innerText = data.title;
-                document.getElementById("episode-desc").innerText = data.description;
-                
-                // Inject the video link into the player and load it
-                const player = document.getElementById("en-player");
-                player.src = data.videoUrl;
-                player.load();
-            } else {
-                console.log("No such episode found!");
-            }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });
+        // Simple function to hide the hero banner and show the video player
+        function playVideo() {
+            document.querySelector('.hero').style.display = 'none';
+            document.getElementById('player-container').style.display = 'block';
+            document.getElementById('en-player').play();
+            
+            // Note: Once you hook Firebase back up, you'll put your db.collection().get() code here
+            // to fetch the correct URL before calling .play()!
+        }
     </script>
+
 </body>
 </html>
